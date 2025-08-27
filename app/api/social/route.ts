@@ -1,5 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  })
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const hashtags = searchParams.get("hashtags")?.split(",") || ["trending"]
@@ -22,13 +33,32 @@ export async function GET(request: NextRequest) {
       })),
     )
 
-    return NextResponse.json({
-      items: mockPosts,
-      page,
-      hasMore: page < 6,
-      total: hashtags.length * 72,
-    })
+    return NextResponse.json(
+      {
+        items: mockPosts,
+        page,
+        hasMore: page < 6,
+        total: hashtags.length * 72,
+      },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
+      },
+    )
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch social posts" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch social posts" },
+      {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
+      },
+    )
   }
 }

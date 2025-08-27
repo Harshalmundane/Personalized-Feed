@@ -1,6 +1,6 @@
 import type { ContentItem } from "../slices/contentSlice"
 
-const API_BASE_URL = process.env.NODE_ENV === "production" ? "https://your-domain.com/api" : "/api"
+const API_BASE_URL = "/api"
 
 export interface ApiResponse<T> {
   items: T[]
@@ -15,6 +15,8 @@ export interface SearchResponse extends ApiResponse<ContentItem> {
 
 class ApiService {
   private async fetchWithRetry<T>(url: string, options: RequestInit = {}, retries = 3): Promise<T> {
+    console.log("[v0] Making API call to:", url)
+
     for (let i = 0; i < retries; i++) {
       try {
         const response = await fetch(url, {
@@ -26,11 +28,15 @@ class ApiService {
         })
 
         if (!response.ok) {
+          console.log("[v0] API call failed with status:", response.status)
           throw new Error(`HTTP error! status: ${response.status}`)
         }
 
-        return await response.json()
+        const data = await response.json()
+        console.log("[v0] API call successful:", url)
+        return data
       } catch (error) {
+        console.log("[v0] API call error:", error)
         if (i === retries - 1) throw error
         await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)))
       }

@@ -7,7 +7,7 @@ import { ReduxProvider } from "@/components/providers/redux-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
-  title: "Personalized Content Dashboard",
+  title: "Personalized Feed Dashboard",
   description: "Your personalized content hub for news, recommendations, and social media",
   generator: "Harshal Mundane",
 }
